@@ -24,11 +24,10 @@ InlineKeyboardTypes = InlineKeyboardMarkup(inline_keyboard=[
     InlineKeyboardButton(text='2️⃣', callback_data="task"),
     InlineKeyboardButton(text='3️⃣', callback_data="termin"),
     InlineKeyboardButton(text='4️⃣', callback_data="TestTask")],
+    [InlineKeyboardButton(text='Другой вопрос', callback_data="another")],
     [InlineKeyboardButton(text='⬅️ Назад в меню', callback_data="EditBack")]
 ])
 
 InlineKeyboardBack = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="⬅️ Назад в меню", callback_data="back")]
 ])
-
-KeyboardDel = ReplyKeyboardRemove()

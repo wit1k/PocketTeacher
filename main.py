@@ -15,7 +15,7 @@ dp.include_router(UserPrivateRt)
 async def main():
     try:
         await bot.delete_webhook(drop_pending_updates=True)
-        print('Бот запущен')
+        print('Бот запущен')  
         await dp.start_polling(bot)
     except Exception as e:
         print(f'Ошибка: {e}')
