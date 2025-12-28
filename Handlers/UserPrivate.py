@@ -15,6 +15,7 @@ class States(StatesGroup):
     waiting_for_question_task = State()
     waiting_for_question_termin = State()
     waiting_for_question_TestTask = State()
+    waiting_for_question_another = State()
 
 @UserPrivateRt.message(CommandStart())
 async def start_cmd(message:Message):
@@ -148,16 +149,13 @@ async def PlanPrompt(message:Message):
 
 Правила ответа:
 1. Пиши кратко и по делу
-2. Каждый раздел с новой строки и выделяй жирным шрифтом через HTML-формат(<b>, </b>)
+2. Каждый раздел с новой строки
 3. Используй простой язык для школьников
 4. Давай конкретные советы
-5. Важные моменты так же форматируй через HTML(<b>, </b>)
-6. Если ты форматируешь отдельные буквы или слова, тоже используй HTML(<b>, </b>)
-7. Если вопрос ученика не связан с учебой, вежливо откажи ему и скажи что ты учитель
-8. Если ученик спрашивает определение термина или просит пробные задачи или просит объяснения задачи, 
+5. Если вопрос ученика не связан с учебой, вежливо откажи ему и скажи что ты учитель
+6. Если ученик спрашивает определение термина или просит пробные задачи или просит объяснения задачи, 
 тоже откажи и скажи ему выбрать другой тип ответа в меню
-9. Форматируй ОБЯЗАТЕЛЬНО все в формате HTML(<b>, </b>)
-10. Не используй тег <br>
+7. НЕ используй HTML теги или другое форматирование - пиши обычным текстом
 
 Вопрос ученика: {question_plan}
 '''
@@ -169,7 +167,7 @@ async def PlanPrompt(message:Message):
         ],
         timeout=15
     )
-    await message.answer(text=response.choices[0].message.content, parse_mode="HTML", reply_markup=kb.InlineKeyboardBack)
+    await message.answer(text=response.choices[0].message.content, reply_markup=kb.InlineKeyboardBack)
 
 @UserPrivateRt.callback_query(F.data == 'task')
 async def task(callback:CallbackQuery, state:FSMContext):
@@ -205,15 +203,12 @@ async def taskPrompt(message:Message):
 5. Ответ:
 
 Правила ответа:
-1. Каждый раздел с новой строки и выделяй жирным шрифтом через HTML-формат(<b>, </b>)
+1. Каждый раздел с новой строки
 2. Используй простой язык для школьников
-3. Важные моменты так же форматируй через HTML(<b>, </b>)
-4. Если ты форматируешь отдельные буквы или слова, тоже используй HTML(<b>, </b>)
-5. Если вопрос ученика не связан с учебой, вежливо откажи ему и скажи что ты учитель(ответ не по структуре)
-6. Если ученик спрашивает по школьной теме, но не просит объяснения задачи, а просит определение термина, 
+3. Если вопрос ученика не связан с учебой, вежливо откажи ему и скажи что ты учитель(ответ не по структуре)
+4. Если ученик спрашивает по школьной теме, но не просит объяснения задачи, а просит определение термина, 
 пробные задачи или составить план подготовки, тоже откажи и скажи ему выбрать другой тип ответа в меню.
-7. Форматируй ОБЯЗАТЕЛЬНО все в формате HTML(<b>, </b>)
-8. Не используй тег <br>
+5. НЕ используй HTML теги или другое форматирование - пиши обычным текстом
 
 Вопрос ученика: {question_task}
 '''
@@ -225,7 +220,7 @@ async def taskPrompt(message:Message):
         ],
         timeout=15
     )
-    await message.answer(text=response.choices[0].message.content, parse_mode="HTML", reply_markup=kb.InlineKeyboardBack)
+    await message.answer(text=response.choices[0].message.content, reply_markup=kb.InlineKeyboardBack)
 
 @UserPrivateRt.callback_query(F.data == 'termin')
 async def termin(callback:CallbackQuery, state:FSMContext):
@@ -247,14 +242,11 @@ async def terminPrompt(message:Message):
 
 Правила ответа:
 1. Пиши кратко и по делу
-2. Название термина выдели жирным шрифтом через HTML(<b>, </b>)
-3. Используй простой язык для школьников
-4. Важные моменты так же форматируй через HTML(<b>, </b>)
-5. Если вопрос ученика не связан с учебой, вежливо откажи ему и скажи что ты учитель
-6. Если ученик спрашивает по школьной теме, но не просит составить план или не просит подготовить к работе, 
+2. Используй простой язык для школьников
+3. Если вопрос ученика не связан с учебой, вежливо откажи ему и скажи что ты учитель
+4. Если ученик спрашивает по школьной теме, но не просит составить план или не просит подготовить к работе, 
 а просит определение термина, пробные задачи или объяснение своей задачи, тоже откажи и скажи ему выбрать другой тип ответа в меню
-7. Форматируй ОБЯЗАТЕЛЬНО все в формате HTML(<b>, </b>)
-8. Не используй тег <br>
+5. НЕ используй HTML теги или другое форматирование - пиши обычным текстом
 
 Вопрос ученика: {question_termin}
 '''
@@ -266,7 +258,7 @@ async def terminPrompt(message:Message):
         ],
         timeout=15
     )
-    await message.answer(text=response.choices[0].message.content, parse_mode="HTML", reply_markup=kb.InlineKeyboardBack)
+    await message.answer(text=response.choices[0].message.content, reply_markup=kb.InlineKeyboardBack)
 
 @UserPrivateRt.callback_query(F.data == 'TestTask')
 async def termin(callback:CallbackQuery, state:FSMContext):
@@ -278,28 +270,26 @@ async def termin(callback:CallbackQuery, state:FSMContext):
 async def terminPrompt(message:Message):
     await message.answer("<b>⏳ Думаю над ответом...</b>", parse_mode="HTML")
     question_TestTask = message.text
-    prompt_termin = f'''
+    prompt_TestTask = f'''
     Ты - опытный учитель, дающий ученику пробные задачи по теме, которую скажет ученик.
 
 Структура ответа:
 Задача 1:
-Ответ: ||(ответ)||
-(текст задачи без решения, ответ нужно скрыть для телеграмма двумя вертикальными чертами"||" в начале и в конце ответа. Ответ напиши на следующей строке после самой задачи)
+(текст задачи без решения)
+Ответ: (ответ)
 Задача 2:
-Ответ: ||(ответ)||
-(текст задачи без решения, ответ нужно скрыть для телеграмма двумя вертикальными чертами"||" в начале и в конце ответа. Ответ напиши на следующей строке после самой задачи)
+(текст задачи без решения)
+Ответ: (ответ)
 Задача 3:
-Ответ: ||(ответ)||
-(текст задачи без решения, ответ нужно скрыть для телеграмма двумя вертикальными чертами"||" в начале и в конце ответа. Ответ напиши на следующей строке после самой задачи)
+(текст задачи без решения)
+Ответ: (ответ)
 
 Правила ответа:
 1. Придумай 3 задачи и начинай от легко и закончи сложно(задача 1 - легкая, задача 2 - средняя, задача 3 - сложная)
-2. Важные моменты выделяй шрифтом формата HTML(<b>, </b>)
-3. Если вопрос ученика не связан с учебой, вежливо откажи ему и скажи что ты учитель
-4. Если ученик спрашивает по школьной теме, но не просит задачи, а просит определение термина, 
+2. Если вопрос ученика не связан с учебой, вежливо откажи ему и скажи что ты учитель
+3. Если ученик спрашивает по школьной теме, но не просит задачи, а просит определение термина, 
 план подготовки или объяснение своей задачи, тоже откажи и скажи ему выбрать другой тип ответа в меню
-5. Форматируй ОБЯЗАТЕЛЬНО все в формате HTML(<b>, </b>)
-6. Не используй тег <br>
+4. НЕ используй HTML теги или другое форматирование - пиши обычным текстом
 
 Вопрос ученика: {question_TestTask}
 '''
@@ -307,11 +297,40 @@ async def terminPrompt(message:Message):
         model = 'deepseek-chat',
         messages=[
             {"role": "system", "content": "Ты опытный учитель"},
-            {"role": "user", "content": prompt_termin}
+            {"role": "user", "content": prompt_TestTask}
         ],
         timeout=15
     )
-    await message.answer(text=response.choices[0].message.content, parse_mode="HTML", reply_markup=kb.InlineKeyboardBack)
+    await message.answer(text=response.choices[0].message.content, reply_markup=kb.InlineKeyboardBack)
+
+@UserPrivateRt.callback_query(F.data == 'another')
+async def termin(callback:CallbackQuery, state:FSMContext):
+    await callback.answer('')
+    await callback.message.edit_text("<b>Ваш вопрос\n\nНапишите свой вопрос, а я отвечу на него:</b>", parse_mode="HTML")
+    await state.set_state(States.waiting_for_question_another)
+
+@UserPrivateRt.message(States.waiting_for_question_another)
+async def terminPrompt(message:Message):
+    await message.answer("<b>⏳ Думаю над ответом...</b>", parse_mode="HTML")
+    question_TestTask = message.text
+    prompt_TestTask = f'''
+    Ты - опытный учитель, отвечающий на любой, но только школьный вопрос школьника.
+
+Правила ответа:
+1. Если вопрос ученика не связан с учебой, вежливо откажи ему и скажи что ты учитель
+2. НЕ используй HTML теги или другое форматирование - пиши обычным текстом
+
+Вопрос ученика: {question_TestTask}
+'''
+    response = client.chat.completions.create(
+        model = 'deepseek-chat',
+        messages=[
+            {"role": "system", "content": "Ты опытный учитель"},
+            {"role": "user", "content": prompt_TestTask}
+        ],
+        timeout=15
+    )
+    await message.answer(text=response.choices[0].message.content, reply_markup=kb.InlineKeyboardBack)
 
 @UserPrivateRt.callback_query(F.data == 'back')
 async def back(callback:CallbackQuery, state:FSMContext):
